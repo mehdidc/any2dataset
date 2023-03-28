@@ -236,7 +236,7 @@ class LoggerProcess(multiprocessing.context.SpawnProcess):
                 stats_files = fs.glob(output_path + "/*.json")
 
                 # filter out files that have an id smaller than start_shard_id
-                stats_files = [f for f in stats_files if int(f.split("/")[-1].split("_")[0]) >= self.start_shard_id]
+                stats_files = [f for f in stats_files if int(f.split("/")[-1].split("_")[0].replace(".json", "")  ) >= self.start_shard_id]
 
                 # get new stats files
                 new_stats_files = set(stats_files) - self.stats_files

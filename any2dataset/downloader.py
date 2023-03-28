@@ -1,5 +1,5 @@
 """the downloader module handles the downloading"""
-
+import os
 from multiprocessing.pool import ThreadPool
 from threading import Semaphore
 import urllib.request
@@ -19,6 +19,14 @@ def download_file(row, timeout):
     """Download a file with urllib"""
     key, url = row
     file_stream = None
+    if os.path.exists(url):
+        try:
+            file_stream = io.BytesIO(open(url, "rb").read())
+            return key, file_stream, None
+        except Exception as err:  # pylint: disable=broad-except
+            if file_stream is not None:
+                file_stream.close()
+            return key, None, str(err)
     try:
         request = urllib.request.Request(
             url,
